@@ -1,5 +1,5 @@
 // controllers/enquiryController.js
-const Enquiry = require('../models/Enquiry');
+const Enquiry = require('../models/enquiry');
 
 // Create a new enquiry
 exports.createEnquiry = async (req, res) => {
