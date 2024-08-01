@@ -1,0 +1,51 @@
+[
+    {
+        "_id": "66aa0ceceaf797a317a3ea99",
+        "listingType": "Rent",
+        "propertyKind": "Residential",
+        "propertyType": "Apartment",
+        "contactNumber": "9083775974",
+        "listedBy": "Himanshu Raj ",
+        "listedAgencyName": null,
+        "address": "1060",
+        "locality": "Kshudiram Nagar",
+        "city": "Haldia",
+        "state": "West Bengal",
+        "pincode": "721657",
+        "carpetArea": "2000",
+        "price": 5000,
+        "images": [
+            "1000069780.jpg",
+            "1000069684.jpg"
+        ],
+        "video": "1000067444.mp4",
+        "selectedSubscription": "Basic Plan",
+        "createdAt": "2024-07-31T10:07:40.580Z",
+        "updatedAt": "2024-07-31T10:07:40.589Z",
+        "__v": 0
+    },
+    {
+        "_id": "66aa1faef4fe408126efb172",
+        "listingType": "Sell",
+        "propertyKind": "Residential",
+        "propertyType": "1RK",
+        "contactNumber": "9874125630",
+        "emailAddress": "test@gmail.com",
+        "ownerName": "Test",
+        "address": "1060",
+        "locality": "Kshudiram Nagar",
+        "city": "Haldia",
+        "state": "West Bengal",
+        "pincode": "721657",
+        "carpetArea": "1200",
+        "price": 2580,
+        "images": [
+            "1000069847.jpg",
+            "1000069845.jpg"
+        ],
+        "video": "1000067444.mp4",
+        "createdAt": "2024-07-31T11:27:42.636Z",
+        "updatedAt": "2024-07-31T11:27:42.640Z",
+        "__v": 0
+    }
+]

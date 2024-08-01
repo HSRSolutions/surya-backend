@@ -4,15 +4,22 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const Razorpay = require('razorpay');
+var morgan = require('morgan')
+var path = require('path')
+var rfs = require('rotating-file-stream')
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const razorpay = new Razorpay({
-    key_id: 'rzp_live_VpdlfbVgfwjlPy',
-    key_secret: 'xIJ2ECnq7G89ieQMQxVb8RWu',
-});
+// create a rotating write stream
+var accessLogStream = rfs.createStream('access.log', {
+    interval: '1d', // rotate daily
+    path: path.join(__dirname, 'log')
+})
+
+// setup the logger
+app.use(morgan('combined', { stream: accessLogStream }))
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
@@ -22,32 +29,20 @@ db.once('open', () => console.log('Connected to Database'));
 // const propertiesRouter = require('./routes/properties');
 const userRouter = require('./routes/user');
 const propertyRouter = require('./routes/property');
+const enquiryRouter = require('./routes/enquiry');
+const uploadRouter = require('./routes/upload');
+const propertyEnquiryRouter = require('./routes/propertyEnquiry');
+const favouriteRouter = require('./routes/favourite');
 // app.use('/properties', propertiesRouter);
 app.use('/api/v1/user/', userRouter);
-app.use('/api/v1/property', propertyRouter);
+app.use('/api/v1/property/', propertyRouter);
+app.use('/api/v1/enquiry/', enquiryRouter);
+app.use('/api/v1/upload/', uploadRouter);
+app.use('/api/v1/property-enquiry/', propertyEnquiryRouter);
+app.use('/api/v1/favourite/', favouriteRouter);
+
 app.use('/', function (req, res) {
     res.send('Welcome')
-})
-
-app.post('/api/v1/razorpay/create-order', async (req, res) => {
-    const { amount, currency, receipt, payment_capture, notes } = req.body;
-
-    try {
-        // Create order using Razorpay API
-        const order = await razorpay.orders.create({
-            amount,
-            currency,
-            receipt,
-            payment_capture, // 1 for automatic capture, 0 for manual capture
-            notes,
-        });
-
-        // Send the order ID back to the client
-        res.json(order);
-    } catch (error) {
-        console.error('Error creating Razorpay order:', error);
-        res.status(500).json({ error: 'Failed to create Razorpay order' });
-    }
 });
 
 app.listen(process.env.PORT, () => console.log(`Server started on port ${process.env.PORT}`));

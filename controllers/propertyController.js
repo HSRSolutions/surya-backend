@@ -7,6 +7,7 @@ exports.createProperty = async (req, res) => {
         await property.save();
         res.status(201).json(property);
     } catch (error) {
+        console.log(error)
         res.status(400).json({ message: error.message });
     }
 };
@@ -14,12 +15,14 @@ exports.createProperty = async (req, res) => {
 // Get all properties
 exports.getProperties = async (req, res) => {
     try {
-        const properties = await Property.find();
-        res.status(200).json(properties);
+      // Fetch and sort properties by 'createdAt' in descending order
+      const properties = await Property.find().sort({ createdAt: -1 });
+      res.status(200).json(properties);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
-};
+  };
+  
 
 // Get a single property by ID
 exports.getPropertyById = async (req, res) => {
