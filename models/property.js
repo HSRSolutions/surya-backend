@@ -21,6 +21,7 @@ const PropertySchema = new Schema({
   // Property details
   carpetArea: { type: String, required: true },
   price: { type: Number, required: true },
+  description: {type: String},
 
   // Media details
   images: [{ type: String }], // Assuming image URLs or filenames
