@@ -91,7 +91,7 @@ const updateSubscription = async(req, res) =>{
 
 // Update User
 const updateUser = async (req, res) => {
-    console.log('I have been called')
+    // console.log('I have been called')
     try {
         const user = await User.findById(req.params.id);
         // const profilePicture = req.file ? req.file.location : null;
@@ -99,7 +99,7 @@ const updateUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        console.log(req.body)
+        // console.log(req.body)
         // Allow update if user is admin or updating own data
         if (!req.user.isAdmin && req.user.id !== user.id) {
             return res.status(403).json({ message: 'Unauthorized: Admin privileges required' });
@@ -118,7 +118,7 @@ const updateUser = async (req, res) => {
 
         const updatedUser = await user.save();
         res.status(200).json(updatedUser);
-        console.log(updatedUser)
+        // console.log(updatedUser)
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
@@ -225,7 +225,7 @@ const changePassword = async (req, res) => {
 
     } catch (err) {
         res.status(500).json({ message: err.message });
-        console.log(err)
+        // console.log(err)
     }
 }
 

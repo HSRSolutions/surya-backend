@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const enquiryController = require('../controllers/propertyEnquiryControllers');
+const userController = require('../controllers/userController');
 
 
 router.post('/', enquiryController.createEnquiry);
-router.get('/user/:userId', enquiryController.getUserEnquiries);
+router.get('/user',userController.authenticateToken, enquiryController.getUserEnquiries);
 
+router.get('/owner', userController.authenticateToken, enquiryController.receievEnquiry);
 
 module.exports = router;

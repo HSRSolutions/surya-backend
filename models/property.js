@@ -25,6 +25,9 @@ const PropertySchema = new Schema({
   // Media details
   images: [{ type: String }], // Assuming image URLs or filenames
   video: { type: String }, // Assuming video URL or filename
+
+  // Added By
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
   
   // Timestamps
   createdAt: { type: Date, default: Date.now },

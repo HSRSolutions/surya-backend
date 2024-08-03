@@ -7,7 +7,7 @@ exports.createProperty = async (req, res) => {
         await property.save();
         res.status(201).json(property);
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         res.status(400).json({ message: error.message });
     }
 };
@@ -58,6 +58,26 @@ exports.deleteProperty = async (req, res) => {
             return res.status(404).json({ message: 'Property not found' });
         }
         res.status(200).json({ message: 'Property deleted' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+// Get properties for the logged-in user
+exports.getPropertiesByUser = async (req, res) => {
+    try {
+        // Extract userId from the request (e.g., from req.user or a similar mechanism)
+        const userId = req.user.id; // Adjust this depending on how you store user info in the request
+
+        // Find properties by userId
+        const properties = await Property.find({ userId }).sort({ createdAt: -1 });
+        
+        if (!properties.length) {
+            return res.status(404).json({ message: 'No properties found for this user' });
+        }
+
+        res.status(200).json(properties);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
