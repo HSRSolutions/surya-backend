@@ -14,6 +14,7 @@ router.get('/', propertyController.getProperties);
 router.get('/:id', propertyController.getPropertyById);
 router.put('/:id', propertyController.updateProperty);
 router.delete('/:id',userController.authenticateToken, propertyController.deleteProperty);
+router.get('/search', propertyController.search);
 
 router.post('/razorpay/create-order', async (req, res) => {
     const { amount } = req.body;

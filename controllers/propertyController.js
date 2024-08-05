@@ -82,3 +82,32 @@ exports.getPropertiesByUser = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// Search 
+
+exports.search = async(req, res) =>{
+    try {
+        const { query } = req.query;
+    
+        // Build the search query
+        const searchQuery = {
+          $or: [
+            { address: { $regex: query, $options: 'i' } },
+            { locality: { $regex: query, $options: 'i' } },
+            { city: { $regex: query, $options: 'i' } },
+            { state: { $regex: query, $options: 'i' } },
+            { pincode: { $regex: query, $options: 'i' } },
+            { description: { $regex: query, $options: 'i' } },
+            { propertyType: { $regex: query, $options: 'i' } },
+            { propertyKind: { $regex: query, $options: 'i' } },
+            { listingType: { $regex: query, $options: 'i' } },
+          ],
+        };
+    
+        // Fetch properties based on the search query
+        const properties = await Property.find(searchQuery).lean().exec();
+        res.json(properties);
+      } catch (error) {
+        res.status(500).json({ message: 'Error fetching properties', error });
+      }
+};
