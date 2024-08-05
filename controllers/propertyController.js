@@ -88,7 +88,12 @@ exports.getPropertiesByUser = async (req, res) => {
 exports.search = async(req, res) =>{
     try {
         const { query } = req.query;
-    
+        // Validate the query
+        if (!query || typeof query !== 'string') {
+            return res.status(400).json({ message: 'Invalid query parameter' });
+          }
+      console.log(query)
+      
         // Build the search query
         const searchQuery = {
           $or: [
@@ -106,7 +111,7 @@ exports.search = async(req, res) =>{
     
         // Fetch properties based on the search query
         const properties = await Property.find(searchQuery).lean().exec();
-        res.json(properties);
+        res.status(200).json(properties);
       } catch (error) {
         res.status(500).json({ message: 'Error fetching properties', error });
       }
