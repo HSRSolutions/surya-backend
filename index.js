@@ -33,6 +33,7 @@ const enquiryRouter = require('./routes/enquiry');
 const uploadRouter = require('./routes/upload');
 const propertyEnquiryRouter = require('./routes/propertyEnquiry');
 const favouriteRouter = require('./routes/favourite');
+const ticketRouter = require('./routes/ticket');
 // app.use('/properties', propertiesRouter);
 app.use('/api/v1/user/', userRouter);
 app.use('/api/v1/property/', propertyRouter);
@@ -40,7 +41,7 @@ app.use('/api/v1/enquiry/', enquiryRouter);
 app.use('/api/v1/upload/', uploadRouter);
 app.use('/api/v1/property-enquiry/', propertyEnquiryRouter);
 app.use('/api/v1/favourite/', favouriteRouter);
-
+app.use('/api/v1/support/tickets/', ticketRouter);
 app.use('/', function (req, res) {
     res.send('Welcome')
 });
