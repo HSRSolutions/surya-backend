@@ -5,8 +5,8 @@ const Razorpay = require('razorpay');
 const userController = require('../controllers/userController');
 
 const razorpay = new Razorpay({
-    key_id: 'rzp_test_tNBlqavnCA8kID',
-    key_secret: 'HDWq2GcZiHKiFnXcFJ1nejqR',
+    key_id: 'rzp_live_yP2Zn6IAtJKKJp',
+    key_secret: 'iNFZptwEGUiNXIBVUrlBGZqJ',
 });
 
 router.post('/create', propertyController.createProperty);
