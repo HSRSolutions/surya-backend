@@ -84,35 +84,38 @@ exports.getPropertiesByUser = async (req, res) => {
 };
 
 // Search 
-
-exports.search = async(req, res) =>{
+exports.search = async(req, res) => {
     try {
         const { query } = req.query;
+        
         // Validate the query
         if (!query || typeof query !== 'string') {
             return res.status(400).json({ message: 'Invalid query parameter' });
-          }
-      console.log(query)
+        }
+        // console.log("Search Query:", query);
       
         // Build the search query
         const searchQuery = {
-          $or: [
-            { address: { $regex: query, $options: 'i' } },
-            { locality: { $regex: query, $options: 'i' } },
-            { city: { $regex: query, $options: 'i' } },
-            { state: { $regex: query, $options: 'i' } },
-            { pincode: { $regex: query, $options: 'i' } },
-            { description: { $regex: query, $options: 'i' } },
-            { propertyType: { $regex: query, $options: 'i' } },
-            { propertyKind: { $regex: query, $options: 'i' } },
-            { listingType: { $regex: query, $options: 'i' } },
-          ],
+            $or: [
+                { address: { $regex: query, $options: 'i' } },
+                { locality: { $regex: query, $options: 'i' } },
+                { city: { $regex: query, $options: 'i' } },
+                { state: { $regex: query, $options: 'i' } },
+                { pincode: { $regex: query, $options: 'i' } },
+                { description: { $regex: query, $options: 'i' } },
+                { propertyType: { $regex: query, $options: 'i' } },
+                { propertyKind: { $regex: query, $options: 'i' } },
+                { listingType: { $regex: query, $options: 'i' } },
+            ],
         };
-    
+        // console.log("MongoDB Search Query:", searchQuery);
+        
         // Fetch properties based on the search query
-        const properties = await Property.find(searchQuery).lean().exec().sort({ createdAt: -1 });;
+        const properties = await Property.find(searchQuery).sort({ createdAt: -1 }).lean().exec();
+        // console.log("Properties Found:", properties.length);
         res.status(200).json(properties);
-      } catch (error) {
-        res.status(500).json({ message: 'Error fetching properties', error });
-      }
+    } catch (error) {
+        // console.error("Error fetching properties:", error);
+        res.status(500).json({ message: 'Error fetching properties', error: error.message });
+    }
 };

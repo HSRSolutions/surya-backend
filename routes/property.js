@@ -32,7 +32,6 @@ router.post('/razorpay/create-order', async (req, res) => {
         res.status(500).json({ error: 'Failed to create order' });
     }
 });
-
 // Route to get properties for the logged-in user
 router.get('/properties/user', userController.authenticateToken, propertyController.getPropertiesByUser);
 
