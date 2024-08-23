@@ -110,7 +110,7 @@ exports.search = async(req, res) =>{
         };
     
         // Fetch properties based on the search query
-        const properties = await Property.find(searchQuery).lean().exec();
+        const properties = await Property.find(searchQuery).lean().exec().sort({ createdAt: -1 });;
         res.status(200).json(properties);
       } catch (error) {
         res.status(500).json({ message: 'Error fetching properties', error });

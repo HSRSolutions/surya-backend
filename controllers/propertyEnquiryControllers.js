@@ -55,4 +55,13 @@ exports.createEnquiry = async (req, res) => {
       res.status(400).json({ error: error.message });
     }
   };
+
+  exports.getAll = async(req, res)=>{
+    try{
+      const allEnquiries = await PropertyEnquiry.find().sort({ createdAt: -1 });
+      res.status(200).json(allEnquiries);
+    }catch(err){
+      res.status(400).json({ error: error.message });
+    }
+  }
   

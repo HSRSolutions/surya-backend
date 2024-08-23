@@ -59,3 +59,12 @@ exports.deleteTicket = async(req, res) =>{
         res.status(400).json({ error: err.message });
       }
 }
+
+exports.allTickets = async(req, res)=>{
+  try{
+    const allTickets = await Ticket.find().sort({ createdAt: -1 });
+    res.status(200).json(allTickets);
+  }catch(err){
+    res.status(400).json({ error: err.message });
+  }
+}
