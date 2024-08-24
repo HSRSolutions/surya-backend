@@ -13,7 +13,7 @@ router.post('/login', userController.loginUser);
 router.get('/me', userController.authenticateToken, userController.getUser);
 
 router.get('/:id', userController.getUserDetails);
-
+router.put('/update/:id', userController.updateUserDetails);
 // Update user details (protected route)
 router.put('/:id', userController.authenticateToken, userController.updateUser);
 

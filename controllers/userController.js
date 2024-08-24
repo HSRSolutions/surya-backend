@@ -63,6 +63,43 @@ const getUserDetails = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+const updateUserDetails = async (req, res) => {
+    try {
+        // Find the user by ID from request parameters
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Allow update if user is admin or updating own data
+        if (!req.user.isAdmin && req.user.id !== user.id) {
+            return res.status(403).json({ message: 'Unauthorized: Admin privileges required' });
+        }
+
+        // Update user details from request body
+        if (req.body.name != null) {
+            user.name = req.body.name;
+        }
+        if (req.body.phone != null) {
+            user.phone = req.body.phone;
+        }
+
+        // Check if a new password is provided
+        if (req.body.password != null) {
+            // Encrypt the new password using bcrypt
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(req.body.password, salt);
+        }
+
+        // Save the updated user
+        const updatedUser = await user.save();
+        res.status(200).json(updatedUser);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};
 // Update Subscription
 const updateSubscription = async(req, res) =>{
     const { userId } = req.params;
@@ -290,5 +327,6 @@ module.exports = {
     adminLogin,
     changePassword,
     updateSubscription,
-    getUserDetails
+    getUserDetails,
+    updateUserDetails
 };
