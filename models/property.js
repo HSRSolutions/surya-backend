@@ -17,6 +17,7 @@ const PropertySchema = new Schema({
   city: { type: String, required: true },
   state: { type: String, required: true },
   pincode: { type: String, required: true },
+  mapurl: {type: String},
 
   // Property details
   carpetArea: { type: String, required: true },
