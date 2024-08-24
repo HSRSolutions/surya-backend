@@ -65,3 +65,20 @@ exports.createEnquiry = async (req, res) => {
     }
   }
   
+
+  exports.deleteEnquiry = async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      // Find and delete the enquiry by its ID
+      const result = await PropertyEnquiry.findByIdAndDelete(id);
+  
+      if (!result) {
+        return res.status(404).json({ message: 'Enquiry not found' });
+      }
+  
+      res.status(200).json({ message: 'Enquiry deleted successfully' });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };

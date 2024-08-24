@@ -52,7 +52,17 @@ const getUser = async (req, res) => {
     }
 };
 
-
+const getUserDetails = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('-password'); // Exclude password field
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json(user);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
 // Update Subscription
 const updateSubscription = async(req, res) =>{
     const { userId } = req.params;
@@ -279,5 +289,6 @@ module.exports = {
     authenticateAdminToken,
     adminLogin,
     changePassword,
-    updateSubscription
+    updateSubscription,
+    getUserDetails
 };

@@ -12,6 +12,8 @@ router.post('/login', userController.loginUser);
 // Get user details
 router.get('/me', userController.authenticateToken, userController.getUser);
 
+router.get('/:id', userController.getUserDetails);
+
 // Update user details (protected route)
 router.put('/:id', userController.authenticateToken, userController.updateUser);
 
