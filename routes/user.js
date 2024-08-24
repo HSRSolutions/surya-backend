@@ -17,7 +17,7 @@ router.get('/details/:id', userController.getUserDetails);
 // Update user details (protected route)
 router.put('/:id', userController.authenticateToken, userController.updateUser);
 
-router.put('/details/:id', userController.updateUser);
+router.put('/details/:id', userController.updateUserDetails);
 
 
 // Delete a user (protected route)
