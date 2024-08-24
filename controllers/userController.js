@@ -175,17 +175,8 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // // Allow delete if user is admin or deleting own data
-        // if (!req.user.isAdmin && req.user.id !== user.id) {
-        //     return res.status(403).json({ message: 'Unauthorized: Admin privileges required' });
-        // }
-
-        await user.remove();
+        const user = await User.findByIdAndDelete(req.params.id);
+        
         res.json({ message: 'Deleted User' });
     } catch (err) {
         res.status(500).json({ message: err.message });
