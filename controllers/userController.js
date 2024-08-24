@@ -73,11 +73,7 @@ const updateUserDetails = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Allow update if user is admin or updating own data
-        if (!req.user.isAdmin && req.user.id !== user.id) {
-            return res.status(403).json({ message: 'Unauthorized: Admin privileges required' });
-        }
-
+       
         // Update user details from request body
         if (req.body.name != null) {
             user.name = req.body.name;
@@ -85,6 +81,11 @@ const updateUserDetails = async (req, res) => {
         if (req.body.phone != null) {
             user.phone = req.body.phone;
         }
+
+        if (req.body.email != null) {
+            user.email = req.body.email;
+        }
+
 
         // Check if a new password is provided
         if (req.body.password != null) {
@@ -179,10 +180,10 @@ const deleteUser = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Allow delete if user is admin or deleting own data
-        if (!req.user.isAdmin && req.user.id !== user.id) {
-            return res.status(403).json({ message: 'Unauthorized: Admin privileges required' });
-        }
+        // // Allow delete if user is admin or deleting own data
+        // if (!req.user.isAdmin && req.user.id !== user.id) {
+        //     return res.status(403).json({ message: 'Unauthorized: Admin privileges required' });
+        // }
 
         await user.remove();
         res.json({ message: 'Deleted User' });
@@ -194,16 +195,20 @@ const deleteUser = async (req, res) => {
 // Fetch all users
 const getAllUsers = async (req, res) => {
     try {
-        // if (!req.user.isAdmin) {
-        //     return res.status(403).json({ message: 'Unauthorized: Admin privileges required' });
-        // }
-
+        // console.log("I have been called")
+        // Fetch all users from the database
         const users = await User.find();
-        res.json(users);
+        // console.log(users)
+        res.status(200).json(users);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        // Log the error for debugging
+        // console.error('Error fetching users:', err);
+
+        // Send a 500 Internal Server Error response
+        res.status(500).json({ message: 'An error occurred while fetching users', error: err.message });
     }
 };
+
 
 // Admin Login
 const adminLogin = async (req, res) => {
@@ -328,5 +333,5 @@ module.exports = {
     changePassword,
     updateSubscription,
     getUserDetails,
-    updateUserDetails
+    updateUserDetails,
 };
