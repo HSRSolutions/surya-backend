@@ -18,7 +18,7 @@ router.get('/:id', userController.getUserDetails);
 router.put('/:id', userController.authenticateToken, userController.updateUser);
 
 // Delete a user (protected route)
-router.delete('/:id', userController.authenticateToken, userController.deleteUser);
+router.delete('/:id', userController.deleteUser);
 
 // Fetch all users (protected route)
 router.get('/all-users', userController.getAllUsers);
