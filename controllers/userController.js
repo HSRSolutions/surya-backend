@@ -2,6 +2,7 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Property = require('../models/property');
+const mongoose = require('mongoose');
 
 
 // Register a new user
@@ -296,22 +297,34 @@ const getRemainingListingLimit = async (req, res) => {
     try {
       // Find the user by ID
       const user = await User.findById(userId);
-  
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
   
+     // Check if the user has subscriptions
+     if (!user.subscriptions || !Array.isArray(user.subscriptions)) {
+        return res.status(400).json({ message: 'User subscriptions are not valid' });
+      }
+      console.log(user.subscriptions)
+  
       // Calculate total listingsAllowed from active subscriptions
       const totalListingsAllowed = user.subscriptions.reduce((acc, subscription) => {
-        // Check if the subscription is active
+        console.log("Subscription data: ", subscription);
+        
+        // Check if subscription has status and listingsAllowed fields
         if (subscription.status === 'active') {
-          return acc + (subscription.listingsAllowed || 0);
+          const listings = subscription.listingsAllowed || 0;
+          console.log(`Adding ${listings} listings for active subscription`);
+          return acc + listings;
         }
         return acc;
       }, 0);
+
+      console.log("Total Listings Allowed: ", totalListingsAllowed);
   
       // Count the number of properties listed by the user
-      const propertiesListed = await Property.countDocuments({ userId: mongoose.Types.ObjectId(userId) });
+      const propertiesListed = await Property.countDocuments({ userId: new mongoose.Types.ObjectId(userId) });
+
   
       // Calculate remaining listings
       const remainingListings = totalListingsAllowed - propertiesListed;
@@ -325,7 +338,7 @@ const getRemainingListingLimit = async (req, res) => {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
     }
-  };
+};
 
 // Middleware to authenticate user
 const authenticateToken = (req, res, next) => {
