@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Property = require('../models/property');
 
 
 // Register a new user
@@ -113,7 +114,6 @@ const updateSubscription = async (req, res) => {
       transactionId,
       transactionDate,
       listingsAllowed,
-      listingsUsed,
     } = req.body; // New subscription data
   
     try {
@@ -289,6 +289,44 @@ const changePassword = async (req, res) => {
 }
 
 
+// Get remaining listing limit for a user
+const getRemainingListingLimit = async (req, res) => {
+    const { userId } = req.params;
+  
+    try {
+      // Find the user by ID
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Calculate total listingsAllowed from active subscriptions
+      const totalListingsAllowed = user.subscriptions.reduce((acc, subscription) => {
+        // Check if the subscription is active
+        if (subscription.status === 'active') {
+          return acc + (subscription.listingsAllowed || 0);
+        }
+        return acc;
+      }, 0);
+  
+      // Count the number of properties listed by the user
+      const propertiesListed = await Property.countDocuments({ userId: mongoose.Types.ObjectId(userId) });
+  
+      // Calculate remaining listings
+      const remainingListings = totalListingsAllowed - propertiesListed;
+  
+      res.status(200).json({
+        totalListingsAllowed,
+        propertiesListed,
+        remainingListings: remainingListings >= 0 ? remainingListings : 0, // Ensure no negative numbers
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+
 // Middleware to authenticate user
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -341,4 +379,5 @@ module.exports = {
     updateSubscription,
     getUserDetails,
     updateUserDetails,
+    getRemainingListingLimit
 };

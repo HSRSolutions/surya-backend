@@ -34,5 +34,5 @@ router.post('/change-password', userController.authenticateToken, userController
 
 // Update Subscription
 router.put('/update-subscription/:userId', userController.authenticateToken, userController.updateSubscription);
-
+router.get('/listing-limit/:id', userController.getRemainingListingLimit);
 module.exports = router;
