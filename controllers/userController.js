@@ -102,40 +102,56 @@ const updateUserDetails = async (req, res) => {
     }
 };
 // Update Subscription
-const updateSubscription = async(req, res) =>{
+const updateSubscription = async (req, res) => {
     const { userId } = req.params;
-  const { plan, status, startDate, endDate, renewalDate, transactionId,
-    transactionDate, } = req.body;
-
-  try {
-    // Find user by ID
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+    const {
+      plan,
+      status,
+      startDate,
+      endDate,
+      renewalDate,
+      transactionId,
+      transactionDate,
+      listingsAllowed,
+      listingsUsed,
+    } = req.body; // New subscription data
+  
+    try {
+      // Find user by ID
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Create the new subscription object
+      const newSubscription = {
+        plan,
+        status,
+        startDate: startDate ? new Date(startDate) : null,
+        endDate: endDate ? new Date(endDate) : null,
+        renewalDate: renewalDate ? new Date(renewalDate) : null,
+        transactionId,
+        transactionDate: transactionDate ? new Date(transactionDate) : null,
+        listingsAllowed
+      };
+  
+      // Add the new subscription to the user's subscriptions array
+      user.subscriptions.push(newSubscription);
+  
+      // Save the updated user
+      const updatedUser = await user.save();
+  
+      res.status(200).json({
+        message: 'Subscription added successfully',
+        user: updatedUser,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
     }
-
-    // Update subscription details
-    user.subscription.plan = plan || user.subscription.plan;
-    user.subscription.status = status || user.subscription.status;
-    user.subscription.startDate = startDate ? new Date(startDate) : user.subscription.startDate;
-    user.subscription.endDate = endDate ? new Date(endDate) : user.subscription.endDate;
-    user.subscription.renewalDate = renewalDate ? new Date(renewalDate) : user.subscription.renewalDate;
-    user.subscription.transactionId = transactionId || user.subscription.transactionId;
-    user.subscription.transactionDate = transactionDate ? new Date(transactionDate) : user.subscription.transactionDate;
-
-    // Save the updated user
-    const updatedUser = await user.save();
-
-    res.status(200).json({
-      message: 'Subscription updated successfully',
-      user: updatedUser,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-}
+  };
+  
 
 // Update User
 const updateUser = async (req, res) => {
