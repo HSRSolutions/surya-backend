@@ -30,7 +30,7 @@ const PropertySchema = new Schema({
 
   // Added By
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-  
+  status: {type: String, enum: ['Active', 'Inactive'], default: 'Inactive'},
   // Timestamps
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
